@@ -5,37 +5,34 @@ import java.util.Scanner;
 public class PalindromeMaker {
 
     public static void main(String[] args) {
-        //input
+        // get input
         Scanner scannerInstance = new Scanner(System.in);
         int len = scannerInstance.nextInt();
         String inputRead = scannerInstance.next();
-        String[] input = inputRead.split("");
+        System.out.print(countPalindromeExtraLetters(len, inputRead));
+    }
 
-
-        Map<String, Integer> map = new HashMap<String, Integer>();
-        int pos = 0;
+    public static int countPalindromeExtraLetters(int len, String inputRead) {
+        if(len <= 1)    return 0;
+        int pos = 1;
         int count = 0;
         // find the first pair
-        while(!map.containsKey(input[pos])) {
-            map.put(input[pos], pos);
-            if(pos + 1 == input.length) count = input.length - 1; else pos++;
-        }
-        int pairsCount = 0;
-        int lastPosFound = 0;
-        if(count == 0) {
-            for(int j = pos; j < input.length; j++) {
-                 if(map.containsKey(input[j])) {
-                    count = j - map.get(input[j]) - (pairsCount * 2) - 1;
-                    if(pairsCount == 0 && (j - map.get(input[j]) > 1))  count -= 1;
-                    pairsCount++;
-                    lastPosFound = map.get(input[j]);
-                }
-                else    count++;
-                if(j + 1 == input.length && lastPosFound != 0)
-                    count += lastPosFound;
+        while(pos < len && !inputRead.substring(0, pos).contains(String.valueOf(inputRead.charAt(pos))))    pos++;
+        // no duplicates
+        if(pos == 1)    return 0;
+        if(pos == len) count = len - 1;
+        else {
+            int pairsCount = 0;
+            // String part 1 of the palindrome around the first pair
+            int firstPairDiff = pos - inputRead.indexOf(inputRead.charAt(pos)) > 1 ? 1 : 0;
+            String inputReadPart1 = inputRead.substring(0, pos - firstPairDiff);
+            for(int j = pos; j < len; j++) {
+                if(inputReadPart1.contains(String.valueOf(inputRead.charAt(j)))) pairsCount++;
             }
+            // count is the string length minus the number of pairs - the
+            count = len - (pairsCount * 2) - firstPairDiff;
         }
-        System.out.print(count);
+        return count;
     }
 
 }
