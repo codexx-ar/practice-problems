@@ -1,5 +1,4 @@
-import java.util.HashMap;
-import java.util.Map;
+package com.codexx_ar.practice_problems;
 import java.util.Scanner;
 
 public class PalindromeMaker {
